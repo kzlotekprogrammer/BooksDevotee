@@ -39,10 +39,6 @@ namespace SDK.PayU
 
         public async Task<HttpResponseMessage> Test(string authParam)
         {
-            HttpResponseMessage authRespMsg = await Authorize();
-            if (!authRespMsg.IsSuccessStatusCode)
-                throw new Exception("Authorization error");
-
             OrderCreateRequestDTO ordCreDTO = GenerateTestOrderCreationRequest();
             string json = JsonConvert.SerializeObject(ordCreDTO, Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
             return await HttpUtils.PostAsyncJson(new Uri(baseUri, urlCreateOrder), json, authParam);
