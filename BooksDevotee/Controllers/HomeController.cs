@@ -1,26 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using BooksDevotee.Models;
+using BooksDevotee.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using BooksDevotee.Models;
+using System.Diagnostics;
 
 namespace BooksDevotee.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ILogger<HomeController> logger;
+        private readonly IBookRepository bookRepository;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IBookRepository bookRepository)
         {
-            _logger = logger;
+            this.logger = logger;
+            this.bookRepository = bookRepository;
         }
 
         public IActionResult Index()
         {
-            return View();
+            return View(bookRepository.GetAllBooks());
+        }
+
+        public IActionResult Details(int id)
+        {
+            return View(bookRepository.GetBook(id));
         }
 
         public IActionResult Privacy()

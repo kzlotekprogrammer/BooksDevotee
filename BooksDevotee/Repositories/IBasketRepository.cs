@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using BooksDevotee.Models;
+using System.Collections.Generic;
 
-namespace BooksDevotee.Models
+namespace BooksDevotee.Repositories
 {
     public interface IBasketRepository
     {

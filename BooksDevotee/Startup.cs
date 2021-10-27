@@ -1,4 +1,5 @@
 using BooksDevotee.Models;
+using BooksDevotee.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -26,6 +27,11 @@ namespace BooksDevotee
             services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<AppDbContext>();
 
             services.AddControllersWithViews();
+
+            services.AddScoped<IBookRepository, SQLBookRepository>();
+            services.AddScoped<IBasketBookRepository, SQLBasketBookRepository>();
+            services.AddScoped<IBasketRepository, SQLBasketRepository>();
+            services.AddScoped<IImageRepository, SQLImageRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

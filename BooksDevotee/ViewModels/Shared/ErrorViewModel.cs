@@ -1,5 +1,3 @@
-using System;
-
 namespace BooksDevotee.Models
 {
     public class ErrorViewModel
