@@ -35,6 +35,7 @@ namespace BooksDevotee.Controllers
         {
             PayUClient payUClient = new PayUClient(clientId, clientSecret, baseUri);
 
+            //ToDo throw exception
             HttpResponseMessage authRespMsg = await payUClient.Authorize();
             if (!authRespMsg.IsSuccessStatusCode)
                 return RedirectToAction("error", "home");

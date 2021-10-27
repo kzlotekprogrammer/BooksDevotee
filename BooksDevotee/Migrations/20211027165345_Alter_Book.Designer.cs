@@ -3,15 +3,17 @@ using System;
 using BooksDevotee.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace BooksDevotee.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211027165345_Alter_Book")]
+    partial class Alter_Book
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -132,15 +134,22 @@ namespace BooksDevotee.Migrations
 
             modelBuilder.Entity("BooksDevotee.Models.BasketBook", b =>
                 {
-                    b.Property<int>("BookId")
-                        .HasColumnType("integer");
+                    b.Property<int>("BasketBookId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<int>("BasketId")
                         .HasColumnType("integer");
 
-                    b.HasKey("BookId", "BasketId");
+                    b.Property<int>("BookId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("BasketBookId");
 
                     b.HasIndex("BasketId");
+
+                    b.HasIndex("BookId");
 
                     b.ToTable("BasketBooks");
                 });
@@ -191,13 +200,20 @@ namespace BooksDevotee.Migrations
 
             modelBuilder.Entity("BooksDevotee.Models.BookCategory", b =>
                 {
+                    b.Property<int>("BookCategoryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
                     b.Property<int>("BookId")
                         .HasColumnType("integer");
 
                     b.Property<int>("CategoryId")
                         .HasColumnType("integer");
 
-                    b.HasKey("BookId", "CategoryId");
+                    b.HasKey("BookCategoryId");
+
+                    b.HasIndex("BookId");
 
                     b.HasIndex("CategoryId");
 
@@ -211,7 +227,7 @@ namespace BooksDevotee.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<string>("CategoryName")
+                    b.Property<string>("Name")
                         .HasColumnType("text");
 
                     b.HasKey("CategoryId");
@@ -222,32 +238,32 @@ namespace BooksDevotee.Migrations
                         new
                         {
                             CategoryId = 1,
-                            CategoryName = "Literatura obyczajowa, romans"
+                            Name = "Literatura obyczajowa, romans"
                         },
                         new
                         {
                             CategoryId = 2,
-                            CategoryName = "Kryminał, sensacja, thriller"
+                            Name = "Kryminał, sensacja, thriller"
                         },
                         new
                         {
                             CategoryId = 3,
-                            CategoryName = "Fantasy, science fiction"
+                            Name = "Fantasy, science fiction"
                         },
                         new
                         {
                             CategoryId = 4,
-                            CategoryName = "Reportaż"
+                            Name = "Reportaż"
                         },
                         new
                         {
                             CategoryId = 5,
-                            CategoryName = "Horror"
+                            Name = "Horror"
                         },
                         new
                         {
                             CategoryId = 6,
-                            CategoryName = "Literatura młodzieżowa"
+                            Name = "Literatura młodzieżowa"
                         });
                 });
 
@@ -417,7 +433,7 @@ namespace BooksDevotee.Migrations
                         .IsRequired();
 
                     b.HasOne("BooksDevotee.Models.Book", "Book")
-                        .WithMany("BasketBooks")
+                        .WithMany()
                         .HasForeignKey("BookId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -445,7 +461,7 @@ namespace BooksDevotee.Migrations
                         .IsRequired();
 
                     b.HasOne("BooksDevotee.Models.Category", "Category")
-                        .WithMany("BookCategories")
+                        .WithMany()
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -512,13 +528,6 @@ namespace BooksDevotee.Migrations
                 });
 
             modelBuilder.Entity("BooksDevotee.Models.Book", b =>
-                {
-                    b.Navigation("BasketBooks");
-
-                    b.Navigation("BookCategories");
-                });
-
-            modelBuilder.Entity("BooksDevotee.Models.Category", b =>
                 {
                     b.Navigation("BookCategories");
                 });

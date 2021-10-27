@@ -1,8 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using BooksDevotee.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Collections.Generic;
 
-namespace BooksDevotee.Models
+namespace BooksDevotee.Repositories
 {
     public class SQLBasketRepository : IBasketRepository
     {

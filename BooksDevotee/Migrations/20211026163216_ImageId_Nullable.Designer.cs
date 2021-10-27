@@ -3,15 +3,17 @@ using System;
 using BooksDevotee.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace BooksDevotee.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211026163216_ImageId_Nullable")]
+    partial class ImageId_Nullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -132,15 +134,22 @@ namespace BooksDevotee.Migrations
 
             modelBuilder.Entity("BooksDevotee.Models.BasketBook", b =>
                 {
-                    b.Property<int>("BookId")
-                        .HasColumnType("integer");
+                    b.Property<int>("BasketBookId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<int>("BasketId")
                         .HasColumnType("integer");
 
-                    b.HasKey("BookId", "BasketId");
+                    b.Property<int>("BookId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("BasketBookId");
 
                     b.HasIndex("BasketId");
+
+                    b.HasIndex("BookId");
 
                     b.ToTable("BasketBooks");
                 });
@@ -155,29 +164,14 @@ namespace BooksDevotee.Migrations
                     b.Property<string>("Author")
                         .HasColumnType("text");
 
-                    b.Property<string>("CoverType")
-                        .HasColumnType("text");
-
                     b.Property<string>("Description")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Dimensions")
                         .HasColumnType("text");
 
                     b.Property<int?>("ImageId")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("Pages")
-                        .HasColumnType("integer");
-
                     b.Property<decimal>("Price")
                         .HasColumnType("numeric");
-
-                    b.Property<string>("Publisher")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("ReleaseDate")
-                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Title")
                         .HasColumnType("text");
@@ -187,68 +181,6 @@ namespace BooksDevotee.Migrations
                     b.HasIndex("ImageId");
 
                     b.ToTable("Books");
-                });
-
-            modelBuilder.Entity("BooksDevotee.Models.BookCategory", b =>
-                {
-                    b.Property<int>("BookId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("BookId", "CategoryId");
-
-                    b.HasIndex("CategoryId");
-
-                    b.ToTable("BookCategories");
-                });
-
-            modelBuilder.Entity("BooksDevotee.Models.Category", b =>
-                {
-                    b.Property<int>("CategoryId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<string>("CategoryName")
-                        .HasColumnType("text");
-
-                    b.HasKey("CategoryId");
-
-                    b.ToTable("Categories");
-
-                    b.HasData(
-                        new
-                        {
-                            CategoryId = 1,
-                            CategoryName = "Literatura obyczajowa, romans"
-                        },
-                        new
-                        {
-                            CategoryId = 2,
-                            CategoryName = "Kryminał, sensacja, thriller"
-                        },
-                        new
-                        {
-                            CategoryId = 3,
-                            CategoryName = "Fantasy, science fiction"
-                        },
-                        new
-                        {
-                            CategoryId = 4,
-                            CategoryName = "Reportaż"
-                        },
-                        new
-                        {
-                            CategoryId = 5,
-                            CategoryName = "Horror"
-                        },
-                        new
-                        {
-                            CategoryId = 6,
-                            CategoryName = "Literatura młodzieżowa"
-                        });
                 });
 
             modelBuilder.Entity("BooksDevotee.Models.Image", b =>
@@ -417,7 +349,7 @@ namespace BooksDevotee.Migrations
                         .IsRequired();
 
                     b.HasOne("BooksDevotee.Models.Book", "Book")
-                        .WithMany("BasketBooks")
+                        .WithMany()
                         .HasForeignKey("BookId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -434,25 +366,6 @@ namespace BooksDevotee.Migrations
                         .HasForeignKey("ImageId");
 
                     b.Navigation("Image");
-                });
-
-            modelBuilder.Entity("BooksDevotee.Models.BookCategory", b =>
-                {
-                    b.HasOne("BooksDevotee.Models.Book", "Book")
-                        .WithMany("BookCategories")
-                        .HasForeignKey("BookId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BooksDevotee.Models.Category", "Category")
-                        .WithMany("BookCategories")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Book");
-
-                    b.Navigation("Category");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -509,18 +422,6 @@ namespace BooksDevotee.Migrations
             modelBuilder.Entity("BooksDevotee.Models.Basket", b =>
                 {
                     b.Navigation("BasketBooks");
-                });
-
-            modelBuilder.Entity("BooksDevotee.Models.Book", b =>
-                {
-                    b.Navigation("BasketBooks");
-
-                    b.Navigation("BookCategories");
-                });
-
-            modelBuilder.Entity("BooksDevotee.Models.Category", b =>
-                {
-                    b.Navigation("BookCategories");
                 });
 #pragma warning restore 612, 618
         }

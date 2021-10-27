@@ -1,8 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using BooksDevotee.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Collections.Generic;
+using System.Linq;
 
-namespace BooksDevotee.Models
+namespace BooksDevotee.Repositories
 {
     public class SQLBookRepository : IBookRepository
     {
@@ -38,7 +40,11 @@ namespace BooksDevotee.Models
 
         public Book GetBook(int id)
         {
-            return context.Books.Find(id);
+            return context.Books
+                .Where(b => b.BookId == id)
+                .Include(b => b.BookCategories)
+                .ThenInclude(bc => bc.Category)
+                .FirstOrDefault();
         }
 
         public Book Update(Book bookChanges)

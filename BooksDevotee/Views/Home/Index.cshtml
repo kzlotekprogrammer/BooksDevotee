@@ -1,8 +1,26 @@
-﻿@{
+﻿@model IEnumerable<Book>
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+@{ 
+    List<Book> bookList = Model.ToList();
+}
+
+<div class="row">
+    @for (int i = 0; i < bookList.Count; i++)
+    {
+        Book book = bookList[i];
+
+        <div class="col-md-4">
+            <div class="card m-1">
+                <h4 class="card-header text-truncate text-center">
+                    <a href="home/details/@book.BookId" class="text-dark">@book.Title</a>
+                </h4>
+                <img class="card-img-top p-2" src="~/images/noimage.png" />
+                <h3 class="card-title text-primary text-center">@book.Price zł</h3>
+            </div>
+        </div>
+    }
 </div>

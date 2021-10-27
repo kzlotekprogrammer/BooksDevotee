@@ -1,9 +1,7 @@
-﻿using System;
+﻿using BooksDevotee.Models;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace BooksDevotee.Models
+namespace BooksDevotee.Repositories
 {
     public interface IBookRepository
     {
