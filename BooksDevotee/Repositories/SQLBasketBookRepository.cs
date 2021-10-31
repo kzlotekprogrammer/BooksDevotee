@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace BooksDevotee.Models
 {
-    public class SQLBasketBookRepository
+    public class SQLBasketBookRepository : IBasketBookRepository
     {
         private readonly AppDbContext context;
 

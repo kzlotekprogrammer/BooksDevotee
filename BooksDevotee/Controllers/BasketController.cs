@@ -3,22 +3,28 @@ using Microsoft.Extensions.Configuration;
 
 namespace BooksDevotee.Controllers
 {
-    public class PaymentController : Controller
+    public class BasketController : Controller
 	{
         private readonly IConfiguration _config;
 
-		public PaymentController(IConfiguration config)
+		public BasketController(IConfiguration config)
 		{
 			_config = config;
         }
-		public IActionResult Basket()
+		
+		public IActionResult Show()
 		{
 			return View();
 		}
 
-		public IActionResult Transaction()
-        {
+		public IActionResult Add()
+		{
 			return View();
-        }
+		}
+
+		public IActionResult Clear()
+		{
+			return View();
+		}
 	}
 }

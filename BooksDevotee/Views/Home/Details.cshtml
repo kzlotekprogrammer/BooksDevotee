@@ -1,4 +1,4 @@
-﻿@model Book
+﻿@model BooksDevotee.ViewModels.Home.DetailsViewModel
 
 @{
     ViewData["Title"] = "Details";
@@ -7,22 +7,29 @@
 <div class="row">
     <div class="col-md-5">
         <div class="card m-1">
-            <img class="p-3" src="~/images/noimage.png" />
+            @{ 
+                string imgSource = Image.GetImageSource(Model.Book.Image);
+            }
+            <img class="p-3" src="@imgSource" />
         </div>
     </div>
 
+    @{ 
+        Book book = Model.Book;
+    }
+
     <div class="col-md-7">
         <div class="row">
-            <div class="col-12"><h3>@Model.Title</h3></div>
+            <div class="col-12"><h3>@book.Title</h3></div>
         </div>
         <div class="row">
             <div class="col-md-4">Autor</div>
-            <div class="col-md-8">@Model.Author</div>
+            <div class="col-md-8">@book.Author</div>
         </div>
         <div class="row">
             <div class="col-md-4">Kategorie</div>
             <div class="col-md-8">
-                @foreach (BookCategory bookCategory in Model.BookCategories)
+                @foreach (BookCategory bookCategory in book.BookCategories)
                 {
                     <div class="row">
                         <div class="col-md-12">@bookCategory.Category.CategoryName</div>
@@ -32,32 +39,43 @@
         </div>
         <div class="row">
             <div class="col-md-4">Typ okładki</div>
-            <div class="col-md-8">@Model.CoverType</div>
+            <div class="col-md-8">@book.CoverType</div>
         </div>
         <div class="row">
             <div class="col-md-4">Wydawca</div>
-            <div class="col-md-8">@Model.Publisher</div>
+            <div class="col-md-8">@book.Publisher</div>
         </div>
         <div class="row">
             <div class="col-md-4">Wymiary</div>
-            <div class="col-md-8">@Model.Dimensions</div>
+            <div class="col-md-8">@book.Dimensions</div>
         </div>
         <div class="row">
             <div class="col-md-4">Ilość stron</div>
-            <div class="col-md-8">@Model.Pages</div>
+            <div class="col-md-8">@book.Pages</div>
         </div>
         <div class="row">
             <div class="col-md-4">Data wydania</div>
-            <div class="col-md-8">@Model.ReleaseDate</div>
+            <div class="col-md-8">@book.ReleaseDate</div>
+        </div>
+        <div class="row mt-md-3">
+            <div class="col-md-8">
+                <a class="btn btn-primary btn-block" href="../../basket/add/@book.BookId" role="button">Dodaj do koszyka</a>
+            </div>
+        </div>
+        <div class="row mt-md-3">
+            <div class="col-md-4 w-100">
+                <a class="btn btn-warning btn-block" href="../edit/@book.BookId" role="button">Edytuj</a>
+            </div>
+            <div class="col-md-4 w-100">
+                <a class="btn btn-danger btn-block" href="../delete/@book.BookId" role="button">Usuń</a>
+            </div>
         </div>
     </div>
 </div>
 
-
-
 <div class="row">
     <div class="col-md-12">
         <h3>Opis</h3>
-        @Model.Description
+        @book.Description
     </div>
 </div>

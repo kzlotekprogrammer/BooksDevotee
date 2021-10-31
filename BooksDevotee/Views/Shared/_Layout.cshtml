@@ -16,7 +16,7 @@
                         <a class="nav-link" asp-controller="home" asp-action="index">Strona główna</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" asp-controller="payment" asp-action="basket">Koszyk</a>
+                        <a class="nav-link" asp-controller="basket" asp-action="show">Koszyk</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" asp-controller="payu" asp-action="test">PayU Test</a>
@@ -24,9 +24,10 @@
                 </ul>
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
-                        <a class="nav-link" asp-controller="account" asp-action="register">
-                            Zarejestruj się
-                        </a>
+                        <a class="nav-link" asp-controller="home" asp-action="edit">Dodaj książkę</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="account" asp-action="register">Zarejestruj się</a>
                     </li>
                 </ul>
             </div>
