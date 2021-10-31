@@ -35,13 +35,17 @@ namespace BooksDevotee.Repositories
 
         public IEnumerable<Book> GetAllBooks()
         {
-            return context.Books;
+            return context.Books
+                .Include(b => b.Image)
+                .Include(b => b.BookCategories)
+                .ThenInclude(bc => bc.Category);
         }
 
         public Book GetBook(int id)
         {
             return context.Books
                 .Where(b => b.BookId == id)
+                .Include(b => b.Image)
                 .Include(b => b.BookCategories)
                 .ThenInclude(bc => bc.Category)
                 .FirstOrDefault();

@@ -1,11 +1,8 @@
-﻿@model IEnumerable<Book>
+﻿@model BooksDevotee.ViewModels.Home.IndexViewModel
 
 @{
     ViewData["Title"] = "Home Page";
-}
-
-@{ 
-    List<Book> bookList = Model.ToList();
+    List<Book> bookList = Model.BookList.ToList();
 }
 
 <div class="row">
@@ -14,11 +11,14 @@
         Book book = bookList[i];
 
         <div class="col-md-4">
-            <div class="card m-1">
+            <div class="card m-3">
                 <h4 class="card-header text-truncate text-center">
                     <a href="home/details/@book.BookId" class="text-dark">@book.Title</a>
                 </h4>
-                <img class="card-img-top p-2" src="~/images/noimage.png" />
+                @{
+                    string imgSource = Image.GetImageSource(book.Image);
+                }
+                <img class="card-img-top p-2" src="@imgSource" />
                 <h3 class="card-title text-primary text-center">@book.Price zł</h3>
             </div>
         </div>

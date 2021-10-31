@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BooksDevotee.Models
 {
@@ -20,6 +22,22 @@ namespace BooksDevotee.Models
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            builder.Entity<Book>()
+                .Property(b => b.BookId)
+                .ValueGeneratedOnAdd();
+
+            builder.Entity<Basket>()
+                .Property(b => b.BasketId)
+                .ValueGeneratedOnAdd();
+
+            builder.Entity<Image>()
+                .Property(i => i.ImageId)
+                .ValueGeneratedOnAdd();
+
+            builder.Entity<Category>()
+                .Property(c => c.CategoryId)
+                .ValueGeneratedOnAdd();
 
             builder.Entity<BookCategory>()
                 .HasKey(bc => new { bc.BookId, bc.CategoryId });
