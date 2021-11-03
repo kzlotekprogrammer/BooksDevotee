@@ -12,7 +12,7 @@ namespace BooksDevotee.Models
         [Required]
         public string Author { get; set; }
 
-        [Display(Name = "Tutuł")]
+        [Display(Name = "Tytuł")]
         [Required]
         public string Title { get; set; }
 

@@ -1,4 +1,5 @@
-﻿@model BooksDevotee.ViewModels.Home.DetailsViewModel
+﻿@inject SignInManager<ApplicationUser> signInManager;
+@model BooksDevotee.ViewModels.Home.DetailsViewModel
 
 @{
     ViewData["Title"] = "Details";
@@ -7,14 +8,14 @@
 <div class="row">
     <div class="col-md-5">
         <div class="card m-1">
-            @{ 
+            @{
                 string imgSource = Image.GetImageSource(Model.Book.Image);
             }
             <img class="p-3" src="@imgSource" />
         </div>
     </div>
 
-    @{ 
+    @{
         Book book = Model.Book;
     }
 
@@ -59,17 +60,29 @@
         </div>
         <div class="row mt-md-3">
             <div class="col-md-8">
-                <a class="btn btn-primary btn-block" href="../../basket/add/@book.BookId" role="button">Dodaj do koszyka</a>
+                <a class="btn btn-primary btn-block" asp-action="add" asp-controller="basket"
+                   asp-route-id="@book.BookId" role="button">
+                    Dodaj do koszyka
+                </a>
             </div>
         </div>
-        <div class="row mt-md-3">
-            <div class="col-md-4 w-100">
-                <a class="btn btn-warning btn-block" href="../edit/@book.BookId" role="button">Edytuj</a>
+        @if (signInManager.IsSignedIn(User) && (User.IsInRole("Admin") || User.IsInRole("Employee")))
+        {
+            <div class="row mt-md-3">
+                <div class="col-md-4 w-100">
+                    <a class="btn btn-warning btn-block" asp-action="edit" asp-controller="home"
+                       asp-route-id="@book.BookId" role="button">
+                        Edytuj
+                    </a>
+                </div>
+                <div class="col-md-4 w-100">
+                    <a class="btn btn-danger btn-block" asp-action="delete" asp-controller="home"
+                       asp-route-id="@book.BookId" role="button">
+                        Usuń
+                    </a>
+                </div>
             </div>
-            <div class="col-md-4 w-100">
-                <a class="btn btn-danger btn-block" href="../delete/@book.BookId" role="button">Usuń</a>
-            </div>
-        </div>
+        }
     </div>
 </div>
 

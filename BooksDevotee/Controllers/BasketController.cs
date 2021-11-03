@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 
 namespace BooksDevotee.Controllers
 {
-    public class BasketController : Controller
+	[Authorize]
+	public class BasketController : Controller
 	{
         private readonly IConfiguration _config;
 

@@ -13,7 +13,10 @@
         <div class="col-md-4">
             <div class="card m-3">
                 <h4 class="card-header text-truncate text-center">
-                    <a href="home/details/@book.BookId" class="text-dark">@book.Title</a>
+                    <a asp-action="details" asp-controller="home" asp-route-id="@book.BookId" 
+                       class="text-dark">
+                        @book.Title
+                    </a>
                 </h4>
                 @{
                     string imgSource = Image.GetImageSource(book.Image);
