@@ -1,0 +1,26 @@
+﻿@model BooksDevotee.ViewModels.Administration.ListRolesViewModel
+
+@{
+    ViewBag.Title = "Lista ról";
+}
+
+<h1>Lista ról</h1>
+
+@foreach (IdentityRole role in Model.Roles)
+{
+    <div class="card mb-3">
+        <div class="card-header">
+            Role Id : @role.Id
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">@role.Name</h5>
+        </div>
+
+        <div class="card-footer">
+            <a asp-controller="Administration" asp-action="EditUsersInRole" asp-route-roleId="@role.Id" 
+               class="btn btn-primary">
+                Dodaj lub usuń użytkownika
+            </a>
+        </div>
+    </div>
+}

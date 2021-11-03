@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using SDK.PayU;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace BooksDevotee.Controllers
 {
+    [Authorize]
     public class PayUController : Controller
     {
         private string clientId;

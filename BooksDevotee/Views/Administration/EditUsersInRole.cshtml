@@ -1,0 +1,32 @@
+﻿@model BooksDevotee.ViewModels.Administration.EditUsersInRoleViewModel
+
+@{
+    string roleId = Model.RoleId;
+}
+
+<form method="post">
+    <div class="card">
+        <div class="card-header">
+            <h2>Dodaj lub usuń użytkowników z tej roli</h2>
+        </div>
+        <div class="card-body">
+            @for (int i = 0; i < Model.UsersInRole.Count; i++)
+            {
+                <div class="form-check m-1">
+                    <input type="hidden" asp-for="@Model.UsersInRole[i].UserId" />
+                    <input type="hidden" asp-for="@Model.UsersInRole[i].UserName" />
+                    <input asp-for="@Model.UsersInRole[i].IsSelected" class="form-check-input" />
+                    <label class="form-check-label" asp-for="@Model.UsersInRole[i].IsSelected">
+                        @Model.UsersInRole[i].UserName
+                    </label>
+                </div>
+            }
+        </div>
+        <div class="card-footer">
+            <input type="submit" value="Zapisz" class="btn btn-primary" />
+            <a asp-action="ListRoles" class="btn btn-secondary">
+                Anuluj
+            </a>
+        </div>
+    </div>
+</form>

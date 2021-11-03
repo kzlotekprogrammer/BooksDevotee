@@ -1,6 +1,8 @@
 ﻿using BooksDevotee.Models;
 using BooksDevotee.Repositories;
 using BooksDevotee.ViewModels.Home;
+using BooksDevotee.ViewModels.Shared;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -9,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace BooksDevotee.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly IBookRepository bookRepository;
@@ -18,6 +21,7 @@ namespace BooksDevotee.Controllers
             this.bookRepository = bookRepository;
         }
 
+        [AllowAnonymous]
         public IActionResult Index()
         {
             IndexViewModel viewModel = new IndexViewModel();
@@ -25,14 +29,16 @@ namespace BooksDevotee.Controllers
             return View(viewModel);
         }
 
+        [AllowAnonymous]
         public IActionResult Details(int id)
         {
             DetailsViewModel viewModel = new DetailsViewModel();
             viewModel.Book = bookRepository.GetBook(id);
             return View(viewModel);
         }
-        
+
         [HttpGet]
+        [Authorize(Roles = "Admin, Employee")]
         public IActionResult Edit(int id)
         {
             EditViewModel viewModel = new EditViewModel();
@@ -41,6 +47,7 @@ namespace BooksDevotee.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin, Employee")]
         public async Task<IActionResult> Edit(EditViewModel viewModel)
         {
             ModelState.Remove("Book.BookId");
@@ -52,7 +59,7 @@ namespace BooksDevotee.Controllers
                     Image image = new Image();
                     image.FileName = viewModel.FormFile.FileName;
 
-                    using (var memoryStream = new MemoryStream())
+                    using (MemoryStream memoryStream = new MemoryStream())
                     {
                         await viewModel.FormFile.CopyToAsync(memoryStream);
 
@@ -84,17 +91,20 @@ namespace BooksDevotee.Controllers
             return View(viewModel);
         }
 
+        [Authorize(Roles = "Admin, Employee")]
         public IActionResult Delete(int id)
         {
             bookRepository.Delete(id);
             return RedirectToAction("index", "home");
         }
 
+        [AllowAnonymous]
         public IActionResult Privacy()
         {
             return View();
         }
 
+        [AllowAnonymous]
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
