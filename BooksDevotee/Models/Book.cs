@@ -4,6 +4,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BooksDevotee.Models
 {
+    public enum BookStatus
+    {
+        Available = 0,
+        NotAvailable = 1
+    }
+
     public class Book
     {
         public int BookId { get; set; }
@@ -39,6 +45,7 @@ namespace BooksDevotee.Models
 
         [Display(Name = "Typ okładki")]        
         public string CoverType { get; set; }
+        public BookStatus Status { get; set; }
 
         public Image Image { get; set; }
         public virtual ICollection<BookCategory> BookCategories { get; set; }

@@ -1,0 +1,255 @@
+﻿@model BooksDevotee.ViewModels.Order.DetailsViewModel
+
+@{
+    ViewBag.Title = "Szczególy zamówienia";
+    Basket orderData = Model.OrderData;
+}
+
+@{
+    ApplicationUser user = Model.OrderData.ApplicationUser;
+}
+
+<div class="card">
+    <div class="card-header">
+        <h1>Dane klienta</h1>
+    </div>
+    <div class="container-fluid">
+        <div class="row mt-3">
+            <div class="col-md-4">
+                <h4 class="font-weight-bold">Imię:</h4>
+            </div>
+            <div class="col-md-8">
+                <h5 class="font-weight">@user.FirstName</h5>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <h4 class="font-weight-bold">Nazwisko:</h4>
+            </div>
+            <div class="col-md-8">
+                <h5 class="font-weight">@user.LastName</h5>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <h4 class="font-weight-bold">Email:</h4>
+            </div>
+            <div class="col-md-8">
+                <h5 class="font-weight">@user.Email</h5>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <h4 class="font-weight-bold">Numer telefonu:</h4>
+            </div>
+            <div class="col-md-8">
+                <h5 class="font-weight">@user.PhoneNumber</h5>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card mt-3">
+    <div class="card-header">
+        <h1>Adres do wysyłki</h1>
+    </div>
+    <div class="container-fluid">
+        <div class="row mt-3">
+            <div class="col-md-4">
+                <h4 class="font-weight-bold">Kraj:</h4>
+            </div>
+            <div class="col-md-8">
+                <h5 class="font-weight">@user.Country</h5>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <h4 class="font-weight-bold">Miasto:</h4>
+            </div>
+            <div class="col-md-8">
+                <h5 class="font-weight">@user.City</h5>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <h4 class="font-weight-bold">Kod pocztowy:</h4>
+            </div>
+            <div class="col-md-8">
+                <h5 class="font-weight">@user.PostalCode</h5>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <h4 class="font-weight-bold">Ulica:</h4>
+            </div>
+            <div class="col-md-8">
+                <h5 class="font-weight">@user.StreetAndNumber</h5>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <h4 class="font-weight-bold">Firma:</h4>
+            </div>
+            <div class="col-md-8">
+                <h5 class="font-weight">@user.Business</h5>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card mt-3">
+    <div class="card-header">
+        <h1>Szczegóły zamówienia</h1>
+    </div>
+    <div class="container-fluid">
+        <div class="row mt-3">
+            <div class="col-md-4">
+                <h4 class="font-weight-bold">Data utworzenia:</h4>
+            </div>
+            <div class="col-md-8">
+                <h5 class="font-weight">@orderData.CreationDate.ToString("yyyy-MM-dd HH:mm")</h5>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <h4 class="font-weight-bold">Data opłacenia:</h4>
+            </div>
+            <div class="col-md-8">
+                <h5 class="font-weight">
+                    @if (orderData.PaymentDate.HasValue)
+                        @orderData.PaymentDate.Value.ToString("yyyy-MM-dd HH:mm")
+                </h5>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <h4 class="font-weight-bold">Data spakowania:</h4>
+            </div>
+            <div class="col-md-8">
+                <h5 class="font-weight">
+                    @if (orderData.PreparedDate.HasValue)
+                        @orderData.PreparedDate.Value.ToString("yyyy-MM-dd HH:mm")
+                </h5>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <h4 class="font-weight-bold">Data wysłania:</h4>
+            </div>
+            <div class="col-md-8">
+                <h5 class="font-weight">
+                    @if (orderData.SentDate.HasValue)
+                        @orderData.SentDate.Value.ToString("yyyy-MM-dd HH:mm")
+                </h5>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <h4 class="font-weight-bold">Data anulowania:</h4>
+            </div>
+            <div class="col-md-8">
+                <h5 class="font-weight">
+                    @if (orderData.CancelDate.HasValue)
+                        @orderData.CancelDate.Value.ToString("yyyy-MM-dd HH:mm")
+                </h5>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <h4 class="font-weight-bold">Status zamówienia:</h4>
+            </div>
+            <div class="col-md-8">
+                <form method="post">
+                    <input type="hidden" asp-for="OrderData.BasketId" />
+
+                    @{
+                        List<string> allowedStatuses = new List<BasketStatus>()
+                        {
+                            BasketStatus.Canceled,
+                            BasketStatus.Paid,
+                            BasketStatus.Sent,
+                            BasketStatus.Prepared
+                        }.Select(x => ((int)x).ToString()).ToList();
+                    }
+
+                    <select asp-for="OrderData.Status"
+                            asp-items="Html.GetEnumSelectList(typeof (BasketStatus))
+                                   .Where(x => allowedStatuses.Contains(x.Value))"></select>
+
+                    <button type="submit" class="btn btn-primary pt-0">Zmień status</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="card mt-3">
+    <div class="card-header">
+        <h1>Lista produktów</h1>
+    </div>
+    <div class="container-fluid">
+        <div class="row mt-3">
+            <div class="offset-md-2 col-md-4">
+                <h4 class="font-weight-bold">Tytuł</h4>
+            </div>
+            <div class="col-md-2">
+                <h4 class="font-weight-bold">Ilość</h4>
+            </div>
+            <div class="col-md-2">
+                <h4 class="font-weight-bold">Cena</h4>
+            </div>
+        </div>
+
+        @{
+            decimal sum = 0;
+        }
+
+        @foreach (BasketBook orderBook in orderData.BasketBooks)
+        {
+            <div class="row">
+                <div class="col-md-2">
+                    @{
+                        Book book = orderBook.Book;
+                        string imgSource = Image.GetImageSource(book.Image);
+                    }
+                    <img class="card-img-top p-2" src="@imgSource" />
+                </div>
+                <div class="col-md-4">
+                    <a asp-action="details" asp-controller="home" asp-route-bookId="@book.BookId" class="text-dark">
+                        <h4>@book.Title</h4>
+                    </a>
+                </div>
+                <div class="col-md-2">
+                    <h4 class="m-3" style="display:inline">@orderBook.Quantity</h4>
+                </div>
+                <div class="col-md-2">
+                    @{
+                        decimal price = book.Price * orderBook.Quantity;
+                        sum += price;
+                    }
+                    <h4>@price zł</h4>
+                </div>
+            </div>
+        }
+
+        <div class="row">
+            <div class="offset-md-8 col-md-3">
+                <h4>@sum zł</h4>
+            </div>
+        </div>
+    </div>
+</div>

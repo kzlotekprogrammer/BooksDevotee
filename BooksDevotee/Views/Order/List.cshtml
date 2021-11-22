@@ -1,0 +1,73 @@
+﻿@model BooksDevotee.ViewModels.Order.ListViewModel
+
+@{
+    ViewBag.Title = "Lista zamówień";
+    List<Basket> basketList = Model.baskets;
+}
+
+<h1>Lista zamówień</h1>
+
+<div class="row">
+    <div class="col-md-1">
+        <h6 class="font-weight-bold">Id</h6>
+    </div>
+    <div class="col-md-2">
+        <h6 class="font-weight-bold">Data opłacenia</h6>
+    </div>
+    <div class="col-md-2">
+        <h6 class="font-weight-bold">Data wysłania</h6>
+    </div>
+    <div class="col-md-2">
+        <h6 class="font-weight-bold">Wartość</h6>
+    </div>
+    <div class="col-md-2">
+        <h6 class="font-weight-bold">Status</h6>
+    </div>
+    <div class="col-md-3">
+        <h6 class="font-weight-bold">Akcje</h6>
+    </div>
+</div>
+
+@foreach (Basket basket in basketList)
+{
+    decimal totalPrice = basket.BasketBooks.ToList().Sum(bb => bb.Quantity * bb.Book.Price);
+
+    <div class="row">
+        <div class="col-md-1">
+            @basket.BasketId
+        </div>
+        <div class="col-md-2">
+            @if (basket.PaymentDate.HasValue)
+                @basket.PaymentDate.Value.ToString("yyyy-MM-dd HH:mm")
+        </div>
+        <div class="col-md-2">
+            @if (basket.SentDate.HasValue)
+                @basket.SentDate.Value.ToString("yyyy-MM-dd HH:mm")
+        </div>
+        <div class="col-md-2">
+            @totalPrice zł
+        </div>
+        <div class="col-md-2">
+            @EnumUtils.GetDisplayValue(@basket.Status)
+        </div>
+        <div class="col-md-3">
+            <div class="row">
+                <div class="col-md-6 p-1">
+                    <a asp-controller="order" asp-action="details" asp-route-id="@basket.BasketId"
+                       class="btn btn-primary btn-block p-1" role="button">
+                        Szczegóły
+                    </a>
+                </div>
+                @*@if (basket.Status == BasketStatus.Paid)
+                {
+                    <div class="col-md-6 p-1">
+                        <a asp-controller="order" asp-action="confirm" asp-route-id="@basket.BasketId"
+                           class="btn btn-success btn-block p-1" role="button">
+                            Potwierdź
+                        </a>
+                    </div>
+                }*@
+            </div>
+        </div>
+    </div>
+}

@@ -60,8 +60,7 @@
         </div>
         <div class="row mt-md-3">
             <div class="col-md-8">
-                <a class="btn btn-primary btn-block" asp-action="add" asp-controller="basket"
-                   asp-route-id="@book.BookId" role="button">
+                <a class="btn btn-primary btn-block" asp-action="addonebook" asp-controller="basket" asp-route-bookId="@book.BookId" role="button">
                     Dodaj do koszyka
                 </a>
             </div>
@@ -70,14 +69,12 @@
         {
             <div class="row mt-md-3">
                 <div class="col-md-4 w-100">
-                    <a class="btn btn-warning btn-block" asp-action="edit" asp-controller="home"
-                       asp-route-id="@book.BookId" role="button">
+                    <a class="btn btn-warning btn-block" asp-action="edit" asp-controller="home" asp-route-id="@book.BookId" role="button">
                         Edytuj
                     </a>
                 </div>
                 <div class="col-md-4 w-100">
-                    <a class="btn btn-danger btn-block" asp-action="delete" asp-controller="home"
-                       asp-route-id="@book.BookId" role="button">
+                    <a class="btn btn-danger btn-block" asp-action="delete" asp-controller="home" asp-route-id="@book.BookId" role="button">
                         Usuń
                     </a>
                 </div>

@@ -30,10 +30,10 @@ namespace BooksDevotee.Controllers
         }
 
         [AllowAnonymous]
-        public IActionResult Details(int id)
+        public IActionResult Details(int bookId)
         {
             DetailsViewModel viewModel = new DetailsViewModel();
-            viewModel.Book = bookRepository.GetBook(id);
+            viewModel.Book = bookRepository.GetBook(bookId);
             return View(viewModel);
         }
 
