@@ -5,10 +5,16 @@ namespace BooksDevotee.Repositories
 {
     public interface IBasketRepository
     {
-        Basket GetBasket(int id);
-        IEnumerable<Basket> GetAllBaskets();
-        Basket Add(Basket basket);
-        Basket Update(Basket basketChanges);
-        Basket Delete(int id);
+        Basket AddBasket(Basket basket);
+        Basket GetActiveBasketByUserName(string userName);
+        Basket GetBasketDataById(int id);
+        Basket GetBasketById(int id);
+        Basket UpdateBasket(Basket basket);
+        List<Basket> GetAllOrders();
+
+        BasketBook AddBasketBook(BasketBook basketBook);
+        BasketBook GetBasketBook(int basketId, int bookId);
+        BasketBook UpdateBasketBook(BasketBook basketBook);
+        BasketBook DeleteBasketBook(int basketId, int bookId);
     }
 }

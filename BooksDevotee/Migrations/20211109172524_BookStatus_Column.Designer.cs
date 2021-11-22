@@ -3,15 +3,17 @@ using System;
 using BooksDevotee.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace BooksDevotee.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211109172524_BookStatus_Column")]
+    partial class BookStatus_Column
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -109,7 +111,7 @@ namespace BooksDevotee.Migrations
                             Id = "E4F51172-01BD-4181-8619-920C75A1AC06",
                             AccessFailedCount = 0,
                             City = "Warszawa",
-                            ConcurrencyStamp = "5c31c74d-fa78-4e52-ac6e-8cd8bb097d18",
+                            ConcurrencyStamp = "45dd1c09-66ef-40fe-8c94-3a8652f4dadf",
                             Country = "Polska",
                             Email = "Admin@BooksDevotee.com",
                             EmailConfirmed = false,
@@ -118,11 +120,11 @@ namespace BooksDevotee.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@BOOKSDEVOTEE.COM",
                             NormalizedUserName = "ADMIN@BOOKSDEVOTEE.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEFFiE6TO5E2y5HQUqNc6Zn9/y++OG4lnCiTgkM53He1402KxHnUj239t5Q775K1Qrg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEJwK+UqtitMDtyOcGaB94PhYKU1VXzC4r1mVOs6WnF5TcIWV/Tm8kUUWkKMVeOjVxw==",
                             PhoneNumber = "123456789",
                             PhoneNumberConfirmed = false,
                             PostalCode = "11-111",
-                            SecurityStamp = "a42c8661-37a4-487c-831d-40b607f84ebb",
+                            SecurityStamp = "fb945ce6-6c1f-4f42-ad33-81d2cd7be651",
                             StreetAndNumber = "BooksDevotee 1",
                             TwoFactorEnabled = false,
                             UserName = "Admin@BooksDevotee.com"
@@ -139,19 +141,10 @@ namespace BooksDevotee.Migrations
                     b.Property<string>("ApplicationUserId")
                         .HasColumnType("text");
 
-                    b.Property<DateTime?>("CancelDate")
-                        .HasColumnType("timestamp without time zone");
-
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime?>("PaymentDate")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<DateTime?>("PreparedDate")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<DateTime?>("SentDate")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<int>("Status")

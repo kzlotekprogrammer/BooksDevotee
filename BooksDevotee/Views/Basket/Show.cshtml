@@ -1,9 +1,85 @@
-﻿@{
+﻿@model BooksDevotee.ViewModels.Basket.ShowViewModel
+
+@{
     ViewBag.Title = "Zawartość koszyka";
+    Basket basket = Model.ActiveBasket;
 }
 
 <h1>Zawartość koszyka</h1>
 
-<a asp-controller="payu" asp-action="test" class="btn btn-primary">
-    PayU Test
-</a>
+<div class="row">
+    <div class="offset-md-2 col-md-4">
+        <h4 class="font-weight-bold">Tytuł</h4>
+    </div>
+    <div class="col-md-2">
+        <h4 class="font-weight-bold">Ilość</h4>
+    </div>
+    <div class="col-md-2">
+        <h4 class="font-weight-bold">Cena</h4>
+    </div>
+</div>
+
+@{
+    decimal sum = 0;
+}
+
+@foreach (BasketBook basketBook in basket.BasketBooks)
+{
+    <div class="row">
+        <div class="col-md-2">
+            @{
+                Book book = basketBook.Book;
+                string imgSource = Image.GetImageSource(book.Image);
+            }
+            <img class="card-img-top p-2" src="@imgSource" />
+        </div>
+        <div class="col-md-4">
+            <a asp-action="details" asp-controller="home" asp-route-bookId="@book.BookId" class="text-dark">
+                <h4>@book.Title</h4>
+            </a>
+        </div>
+        <div class="col-md-2">
+            <a asp-controller="Basket" asp-action="RemoveOneBook" asp-route-bookId="@book.BookId" class="btn btn-danger">
+                <span class="glyphicon glyphicon-minus"></span>
+            </a>
+
+            <h4 class="m-3" style="display:inline">@basketBook.Quantity</h4>
+
+            <a asp-controller="Basket" asp-action="AddOneBook" asp-route-bookId="@book.BookId" class="btn btn-success">
+                <span class="glyphicon glyphicon-plus"></span>
+            </a>
+        </div>
+        <div class="col-md-2">
+            @{
+                decimal price = book.Price * basketBook.Quantity;
+                sum += price;
+            }
+            <h4>@price zł</h4>
+        </div>
+        <div class="col-md-2">
+            <a asp-controller="Basket" asp-action="RemoveAllBook" asp-route-bookId="@book.BookId" class="btn btn-danger">
+                <span class="glyphicon glyphicon-remove"></span>
+            </a>
+        </div>
+    </div>
+}
+
+<div class="row">
+    <div class="offset-md-8 col-md-3">
+        <h4>@sum zł</h4>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <h4 class="font-weight-bold">Wybierz metodę płatności</h4>
+    </div>
+</div>
+
+<div class="row mt-md-3">
+    <div class="col-md-2 w-100">
+        <a asp-controller="payu" asp-action="createOrder" class="btn btn-primary btn-block" role="button">
+            PayU
+        </a>
+    </div>
+</div>

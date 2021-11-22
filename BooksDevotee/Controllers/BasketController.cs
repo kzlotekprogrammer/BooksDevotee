@@ -1,32 +1,98 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using BooksDevotee.Models;
+using BooksDevotee.Repositories;
+using BooksDevotee.Utils;
+using BooksDevotee.ViewModels.Basket;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
+using System;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace BooksDevotee.Controllers
 {
 	[Authorize]
 	public class BasketController : Controller
 	{
-        private readonly IConfiguration _config;
+        private readonly UserManager<ApplicationUser> userManager;
+        private readonly IBasketRepository basketRepository;
 
-		public BasketController(IConfiguration config)
+        public BasketController(UserManager<ApplicationUser> userManager, IBasketRepository basketRepository)
 		{
-			_config = config;
+            this.userManager = userManager;
+            this.basketRepository = basketRepository;
         }
-		
-		public IActionResult Show()
+
+		public async Task<IActionResult> ShowAsync()
 		{
-			return View();
+			//ToDo koszyk jest pusty
+			ApplicationUser applicationUser = await userManager.GetUserAsync(User);
+			Basket basket = BasketUtils.GetOrCreateActiveBasket(basketRepository, applicationUser);
+
+			ShowViewModel viewModel = new ShowViewModel()
+			{
+				ActiveBasket = basketRepository.GetBasketDataById(basket.BasketId)
+			};
+
+			return View(viewModel);
 		}
 
-		public IActionResult Add()
+		public async Task<IActionResult> AddOneBookAsync(int bookId)
 		{
-			return View();
+			ApplicationUser applicationUser = await userManager.GetUserAsync(User);
+			Basket basket = BasketUtils.GetOrCreateActiveBasket(basketRepository, applicationUser);
+
+			BasketBook basketBook = basketRepository.GetBasketBook(basket.BasketId, bookId);
+			if (basketBook == null)
+            {
+				basketBook = new BasketBook()
+				{
+					BasketId = basket.BasketId,
+					BookId = bookId,
+					Quantity = 1
+				};
+				basketRepository.AddBasketBook(basketBook);
+            }
+            else
+            {
+				basketBook.Quantity++;
+				basketRepository.UpdateBasketBook(basketBook);
+			}
+
+			return RedirectToAction("show");
 		}
 
-		public IActionResult Clear()
+		public async Task<IActionResult> RemoveOneBookAsync(int bookId)
 		{
-			return View();
+			ApplicationUser applicationUser = await userManager.GetUserAsync(User);
+			Basket basket = BasketUtils.GetOrCreateActiveBasket(basketRepository, applicationUser);
+
+			BasketBook basketBook = basketRepository.GetBasketBook(basket.BasketId, bookId);
+			if (basketBook != null && basketBook.Quantity > 0)
+			{
+				basketBook.Quantity--;
+
+				if (basketBook.Quantity > 0)
+					basketRepository.UpdateBasketBook(basketBook);
+				else
+					basketRepository.DeleteBasketBook(basketBook.BasketId, basketBook.BookId);
+			}
+
+			return RedirectToAction("show");
+		}
+
+		public async Task<IActionResult> RemoveAllBook(int bookId)
+		{
+			ApplicationUser applicationUser = await userManager.GetUserAsync(User);
+			Basket basket = BasketUtils.GetOrCreateActiveBasket(basketRepository, applicationUser);
+
+			BasketBook basketBook = basketRepository.GetBasketBook(basket.BasketId, bookId);
+			if (basketBook != null && basketBook.Quantity > 0)
+			{
+				basketRepository.DeleteBasketBook(basketBook.BasketId, basketBook.BookId);
+			}
+
+			return RedirectToAction("show");
 		}
 	}
 }
