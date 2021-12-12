@@ -10,6 +10,7 @@ using SDK.PayU;
 using SDK.PayU.DTO;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -26,6 +27,7 @@ namespace BooksDevotee.Controllers
         private readonly IBasketRepository basketRepository;
 
         public IConfiguration Configuration { get; }
+        public readonly string STATUS_COMPLETED = "COMPLETED";
 
         public PayUController(IConfiguration configuration, 
                               UserManager<ApplicationUser> userManager, 
@@ -97,13 +99,14 @@ namespace BooksDevotee.Controllers
 
             OrderCreateRequestDTO ordCreDTO = new OrderCreateRequestDTO()
             {
-                //notifyUrl = "ToDo",
+                extOrderId = basket.BasketId.ToString(),
+                notifyUrl = "https://booksdevotee.azurewebsites.net/PayU/Notification/",
                 customerIp = Request.HttpContext.Connection.RemoteIpAddress.ToString(),
                 merchantPosId = merchantPosId,
                 description = "BooksDevotee",
                 currencyCode = "PLN",
                 totalAmount = totalPrice,
-                continueUrl = "https://localhost:45455",
+                continueUrl = "https://booksdevotee.azurewebsites.net/",
                 buyer = new BuyerDTO()
                 {
 
@@ -118,8 +121,7 @@ namespace BooksDevotee.Controllers
 
             CreateOrderResult ordCreResult = await payUClient.CreateOrder(ordCreDTO);
 
-            //ToDo to powinno być po odebraniu powiadomienia w Notification
-            basket.Status = BasketStatus.Paid;
+            basket.Status = BasketStatus.InTransaction;
             basket.PaymentDate = DateTime.Now;
             basketRepository.UpdateBasket(basket);
 
@@ -128,11 +130,31 @@ namespace BooksDevotee.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        public IActionResult Notification(NotificationDTO notificationDTO)
+        public async Task<IActionResult> Notification()
         {
-            //ToDo nie mam jak odebrać powiadomienia o płatności - brak publicznego IP
+            //ToDo weryfikacja podpisu
 
-            return View();
+            string body;
+            using (StreamReader reader = new StreamReader(Request.Body))
+            {
+                body = await reader.ReadToEndAsync();
+            }
+
+            NotificationDTO notificationDTO = JsonConvert.DeserializeObject<NotificationDTO>(body);
+            if (notificationDTO.order.status != STATUS_COMPLETED)
+            {
+                int basketId = int.Parse(notificationDTO.order.extOrderId);
+                Basket basket = basketRepository.GetBasketById(basketId);
+
+                if (basket != null)
+                {
+                    basket.Status = BasketStatus.Paid;
+                    basket.PaymentDate = DateTime.Now;
+                    basketRepository.UpdateBasket(basket);
+                }
+            }
+
+            return Ok();
         }
     }
 }
