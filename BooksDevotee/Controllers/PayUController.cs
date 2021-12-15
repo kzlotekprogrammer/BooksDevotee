@@ -1,6 +1,7 @@
 ﻿using BooksDevotee.Models;
 using BooksDevotee.Repositories;
 using BooksDevotee.Utils;
+using Common;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +14,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace BooksDevotee.Controllers
 {
@@ -21,6 +23,7 @@ namespace BooksDevotee.Controllers
     {
         private readonly string clientId;
         private readonly string clientSecret;
+        private readonly string secondKey;
         private readonly int merchantPosId;
         private readonly Uri baseUri;
         private readonly UserManager<ApplicationUser> userManager;
@@ -38,6 +41,7 @@ namespace BooksDevotee.Controllers
             this.basketRepository = basketRepository;
             clientId = configuration.GetValue<string>("ClientId");
             clientSecret = configuration.GetValue<string>("ClientSecret");
+            secondKey = configuration.GetValue<string>("SecondKey");
             baseUri = new Uri(configuration.GetValue<string>("BaseUrlPayU"));
             merchantPosId = configuration.GetValue<int>("MerchantPosId");
         }
@@ -132,12 +136,17 @@ namespace BooksDevotee.Controllers
         [HttpPost]
         public async Task<IActionResult> Notification()
         {
-            //ToDo weryfikacja podpisu
-
             string body;
             using (StreamReader reader = new StreamReader(Request.Body))
             {
                 body = await reader.ReadToEndAsync();
+            }
+
+            string opnPaSign = Request.Headers["OpenPayu-Signature"];
+            string signature = opnPaSign.Split(";").FirstOrDefault(x => x.StartsWith("signature")).Replace("signature=", "");
+            if (CryptoUtils.CalculateExpectedSignature(body + secondKey).Equals(signature, StringComparison.InvariantCultureIgnoreCase))
+            {
+                return BadRequest();
             }
 
             NotificationDTO notificationDTO = JsonConvert.DeserializeObject<NotificationDTO>(body);
@@ -146,12 +155,14 @@ namespace BooksDevotee.Controllers
                 int basketId = int.Parse(notificationDTO.order.extOrderId);
                 Basket basket = basketRepository.GetBasketById(basketId);
 
-                if (basket != null)
+                if (basket == null)
                 {
-                    basket.Status = BasketStatus.Paid;
-                    basket.PaymentDate = DateTime.Now;
-                    basketRepository.UpdateBasket(basket);
+                    return BadRequest();
                 }
+
+                basket.Status = BasketStatus.Paid;
+                basket.PaymentDate = DateTime.Now;
+                basketRepository.UpdateBasket(basket);
             }
 
             return Ok();
